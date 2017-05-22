@@ -24,6 +24,8 @@ Eksperyment polega na stworzeniu architektury (playbooka i ról) [Ansible](https
 
 ### O Ansible (teoretycznie)
 
+
+
 ## Wnioski
 
 ### Rekomendacja

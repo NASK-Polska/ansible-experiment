@@ -30,3 +30,42 @@
     - shell: /usr/bin/whoami
       register: username
     - debug: var=usernamei
+
+# handlers
+
+  tasks:
+    - copy: src=files/httpd.conf
+            dest=/etc/httpd/conf
+      notify:
+        - Apache Restart
+
+  handlers:
+    - name: Apache Restart
+      service: name=httpd state=restarted
+
+# conditional execution
+
+  tasks:
+    - yum: name=httpd state=present
+      when: asnible_os_family == "RedHat"
+
+    - apt: name=apache2 state=present
+      when: asnible_os_family == "Debian"
+
+# another way of conditional
+
+  tasks:
+    - command: ls /path/doesnt/exist
+      register: result
+      ignore_errors: yes
+
+    - debug: msg="Failure!"
+      when: result|failed
+
+# templates
+
+  tasks:
+    - template:
+        src=templates/httpd.j2
+        dest=/etc/httpd/conf/httpd.conf
+        owner=httpd
