@@ -1,21 +1,33 @@
 ---
-- hosts: webservers
-  sudo: yes
+- name: test
+  hosts: webservers
+  gather_facts: no
+  tags:
+    - test
+  become: yes
+  vars_prompt:
+    - name: "sitename"
+      prompt: "What is new site name?"
+  tasks:
+  - debug: msg="The name is {{ sitename }}"
   # remote_user:
   #   vars:
   #     git_repo: ...
   #     db_name: ..
   # gather_facts: no
+- hosts: webservers
+  become: yes
   tasks:
+  - debug: msg="The name is {{ sitename }}"
 
   - name: Install Apache ensure
     yum: name=httpd state=present
 
   - name: Start Apache Services
-  service: name=httpd enabled=yes state=started
+    service: name=httpd enabled=yes state=started
 
 - hosts: dbservers
-  sudo: yes
+  become: yes
 
   tasks: 
   - name: Ensure MySQL is installed
@@ -24,7 +36,7 @@
     service: name=mysqld state=started
 
 - hosts: webservers:dbservers
-  sudo: yes
+  become: yes
 
   tasks:
   - name: Stop IPTABLES NOW!!!

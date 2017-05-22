@@ -4,6 +4,7 @@ Eksperyment polega na stworzeniu architektury (playbooka i ról) [Ansible](https
 
 **Celem eksperymentu jest wydanie rekomendacji dotyczącej wykorzystania programu Ansible w procesie konfiguracji Instancji.**
 
+
 #### Pytania eksperymentalne:
 
 1. Jak będzie wyglądać intergracja Ansible z webowym UI konfiguratora?
@@ -12,11 +13,12 @@ Eksperyment polega na stworzeniu architektury (playbooka i ról) [Ansible](https
 2. Czy Ansible będzie się umiał zająć zarządzaniem użytkownikami w BD?
 3. Wykorzystując docker-compose mamy problem z tym, że modyfikacja jednego serwisu wymaga restartu wszystkich. (docker-compose down; create new compose file; docker-compose up; ) Czy Ansible jest pod tym względem lepsze?
 4. Jak można się komunikować z Ansible? Pisze sie skrypty w plikach czy jest jakieś inne API?
-5. Czy plik parametryzacyjny (`parameters.json`) można zastąpić odpowiednim Playbookiem?
+5. Czy plik parametryzacyjny (*parameters.json*) można zastąpić odpowiednim Playbookiem bądź Rolą?
 
 #### Efekty:
 
-1. Schemat architektury konfiguratora z wykorzystaniem Ansible.
+1. Decyzja odnoście użycia programu Ansible przy tworzeniu konfiguratora instancjii.
+2. Schemat architektury konfiguratora z wykorzystaniem Ansible.
 
 ## Wynik eksperymentu
 

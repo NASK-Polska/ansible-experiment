@@ -1,0 +1,32 @@
+# prompting for input
+
+- hosts: web1
+  vars_prompt:
+    - name: "sitename"
+      prompt: "What is new site name?"
+
+  tasks:
+    - debug: msg="The name is {{ sitename }}"
+
+# including files
+
+  tasks:
+    - include: govapp.yml
+      vars:
+        sitename: Great App
+    - include: loadbalancer.yml
+    - include_vars: variables.yml
+
+# grab output of task for another task
+  tasks:
+    - shell: /usr/bin/whoami
+      register: username
+    - file: path=/home/myfile.txt
+            owner={{ username }} 
+
+# add debug to tasks
+  tasks:
+    - debug: msg"This host is {{ inventory_hostname }} during execution"
+    - shell: /usr/bin/whoami
+      register: username
+    - debug: var=usernamei
