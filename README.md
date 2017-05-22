@@ -42,4 +42,4 @@ Eksperyment polega na stworzeniu architektury (playbooka i ról) [Ansible](https
 1. Sklonować repozytorium
 2. przejść do katalogu: `cd sciezka/do/repo`
 3. w konsoli wpisać: `vagrant up`
-4. w konsoli wpisać: `ansible-playbook playbook_example.yaml`
+4. w konsoli wpisać: `ansible-playbook site.yml`
