@@ -20,7 +20,7 @@ Eksperyment polega na stworzeniu architektury (playbooka i ról) [Ansible](https
 1. Decyzja odnoście użycia programu Ansible przy tworzeniu konfiguratora instancjii.
 2. Schemat architektury konfiguratora z wykorzystaniem Ansible.
 
-## Wynik eksperymentu
+## Przebieg eksperymentu
 
 ### O Ansible (teoretycznie)
 
@@ -30,4 +30,16 @@ Eksperyment polega na stworzeniu architektury (playbooka i ról) [Ansible](https
 
 ### Rekomendacja
 
-## Link do wyniku eksperymentu
+## Odtworzenie eksperymentu
+
+#### Wymagania
+
+- [Ansible](http://docs.ansible.com/ansible/intro_installation.html)
+- [Vagrant](https://www.vagrantup.com/intro/index.html)
+
+#### Proces
+
+1. Sklonować repozytorium
+2. przejść do katalogu: `cd sciezka/do/repo`
+3. w konsoli wpisać: `vagrant up`
+4. w konsoli wpisać: `ansible-playbook playbook_example.yaml`
