@@ -1,0 +1,31 @@
+---
+- hosts: webservers
+  sudo: yes
+  # remote_user:
+  #   vars:
+  #     git_repo: ...
+  #     db_name: ..
+  # gather_facts: no
+  tasks:
+
+  - name: Install Apache ensure
+    yum: name=httpd state=present
+
+  - name: Start Apache Services
+  service: name=httpd enabled=yes state=started
+
+- hosts: dbservers
+  sudo: yes
+
+  tasks: 
+  - name: Ensure MySQL is installed
+    yum: name=mysql-server state=present
+  - name: Start MySQL
+    service: name=mysqld state=started
+
+- hosts: webservers:dbservers
+  sudo: yes
+
+  tasks:
+  - name: Stop IPTABLES NOW!!!
+    service: name=iptables state=stopped
