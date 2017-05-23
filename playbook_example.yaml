@@ -14,8 +14,8 @@
 - name: Get Apache
   hosts: webservers
   become: yes
-  roles:
-    - test
+  # roles:
+    # - test
   vars:
     http_port: 80
     doc_dir: /ansible/
