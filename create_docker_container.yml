@@ -1,0 +1,11 @@
+---
+- hosts: acs
+  remote_user: vagrant
+  become: yes
+  become_method: sudo
+  tasks:
+  - name: create docker container
+    docker_container:
+      name: mycontainer
+      image: ubuntu
+      state: started

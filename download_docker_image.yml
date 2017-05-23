@@ -1,0 +1,10 @@
+---
+- hosts: acs
+  remote_user: vagrant
+  become: yes
+  become_method: sudo
+  tasks:
+  - name: pull image
+    docker_image: 
+      name: ubuntu
+      state: present

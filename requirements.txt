@@ -1,0 +1,4 @@
+# vagrant
+ansible
+docker-py>=1.7.0
+docker-compose>=1.7.0
