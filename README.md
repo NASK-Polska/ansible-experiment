@@ -1,6 +1,6 @@
 # aplikacje.gov.pl – Eksperyment Ansible
 ## Cel eksperymentu
-Eksperyment polega na stworzeniu architektury (playbooka i ról) [Ansible](https://www.ansible.com/) umożliwiającej uruchomienie dockerowego kontenera z serwerem Apache, który serwuje plik index.html z tytułem konfigurowalnym przez użytkownika.
+Eksperyment polega na stworzeniu architektury (playbooka i ról) [Ansible](https://www.ansible.com/) umożliwiającej uruchomienie dockerowego kontenera z serwerem Nginx, który serwuje plik index.html z treścią konfigurowalną przez użytkownika.
 
 **Celem eksperymentu jest wydanie rekomendacji dotyczącej wykorzystania programu Ansible w procesie konfiguracji Instancji.**
 
@@ -41,20 +41,38 @@ Zalety Ansible:
 - YAML
     - Przyjazna i przejrzysta składnia (*YAML ain't a markup language*)
     - Nie wymaga doświadczenia programistycznego
-- Wbudowane security
+- Wbudowane security ([Ansible Vault](http://docs.ansible.com/ansible/playbooks_vault.html))
 - Modularność => rozszerzalność
 
 #### Architektura
 
+
+
 #### Inwentarz
+
+Inwenatarz to plik (typowe nazewnictwo: `hosts` lub `inventory`), w którym specyfikuje się zdalne maszyny, na których wykonywane będą operacje.
+
+Przewidziana przez Ansible syntaktyka pozwala na złożone grupowanie serwerów i pzypisywanie im zmiennych.
+
+#### Konfiguracja
+
+W pliku konfiguracyjnym `ansible.cfg` wyspecyfikować można lokalne atrybuty.
+
+#### Moduły
 
 #### Playbooki
 
 #### Role
 
+#### Schemat
+
+![ansible schema](ansible_schema.png)
+
+źródło: https://app.pluralsight.com/library/courses/hands-on-ansible
+
 ### Struktura repozytorium
 
-### Źródła
+### Wybrane źródła
 
 - https://docs.docker.com/
 - https://www.ansible.com/docker
@@ -81,9 +99,12 @@ Zalety Ansible:
 1. Sklonować repozytorium:
 2. przejść do katalogu: `cd sciezka/do/repo`
 3. w konsoli wpisać: `vagrant up`
-4. w konsoli wpisać: `ansible-playbook install_docker.yml`
-5. w konsoli wpisać: `ansible-playbook build_site.yml`
-6. Zostanie się poproszonym o wpisanie swojego imienia
-7. W przypadku zapytania o hasło (TASK [upload the site directory to the docker host]) wpisać: vagrant
-8. Na końcu w ramach tasku *get the port to go to* wyświetla się komunikat pod jaki adres się udać np: `To see the page, visit 192.168.33.40:32773`
-9. Udać się pod wskazany adres. Powinno się zobaczyć tam stronę z imieniem podanym w kroku 6.
+4. w konsoli wpisać: `ansible-galaxy install -r requirements.yml`
+5. w konsoli wpisać: `ansible-playbook install_docker.yml`
+6. w konsoli wpisać: `ansible-playbook build_site.yml`
+7. Zostanie się poproszonym o wpisanie swojego imienia
+8. W przypadku zapytania o hasło (*TASK [upload the site directory to the docker host]*) wpisać: `vagrant`
+9. Na końcu w ramach tasku *get the port to go to* wyświetla się komunikat pod jaki adres się udać np: `To see the page, visit 192.168.33.40:32773`
+10. Udać się pod wskazany adres. Powinno się zobaczyć tam stronę z imieniem podanym w kroku 7.
+
+Po wykonaniu powyższych kroków, by uruchomić eksperyment ponownie wystarczy zacząć od kroku 6.
