@@ -1,0 +1,33 @@
+- name: Build an image with the command module
+  hosts: test
+  become: yes
+  become_method: sudo
+  vars_prompt:
+    - name: test_name
+      prompt: What is your name?
+  tasks:
+    - name: upload the site directory to the docker host
+      synchronize: src=test_site/site dest=/tmp
+  
+    - name: Deploy index.html
+      template: src=test_site/site/index.html.j2 dest=/tmp/site/index.html
+    
+    # - command: docker images -q built-by-ansible:ex2
+    #   register: image_check
+    
+    - name: build the image
+      command: docker build -t built-by-ansible:ex2 /tmp/site
+      # when: not image_check
+
+    - name: run the site in a docker container
+      docker_container:
+        name: test_site
+        image: "built-by-ansible:ex2"
+        state: started
+        restart_policy: always
+        published_ports: all
+
+    - shell: docker port test_site
+      register: port_info
+    - name: get the port to go to
+      debug: msg="To see the page, visit {{ port_info.stdout|replace("80/tcp -> 0.0.0.0:", "192.168.33.40:") }}"

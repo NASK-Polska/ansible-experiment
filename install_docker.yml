@@ -1,8 +1,9 @@
 ---
 - name: Install Docker
-  hosts: acs
+  hosts: test
   remote_user: vagrant
   become: yes
   become_method: sudo
   roles:
     - angstwad.docker_ubuntu
+

@@ -54,6 +54,17 @@ Zalety Ansible:
 
 ### Struktura repozytorium
 
+### Źródła
+
+- https://docs.docker.com/
+- https://www.ansible.com/docker
+- https://www.ansible.com/blog/six-ways-ansible-makes-docker-compose-better
+- https://docs.ansible.com/ansible/docker_container_module.html
+- https://linuxacademy.com/howtoguides/posts/show/topic/13750-managing-docker-containers-with-ansible
+- https://opensolitude.com/2015/05/26/building-docker-images-with-ansible.html
+- https://www.udemy.com/ansible-essentials-simplicity-in-automation/learn/v4/overview
+- https://app.pluralsight.com/library/courses/hands-on-ansible
+
 ## Wnioski
 
 ### Rekomendacja
@@ -70,5 +81,9 @@ Zalety Ansible:
 1. Sklonować repozytorium:
 2. przejść do katalogu: `cd sciezka/do/repo`
 3. w konsoli wpisać: `vagrant up`
-4. w konsoli wpisać: `ansible-playbook webserver.yml`
-5. otworzyć w przeglądarce adres `192.168.33.20`
+4. w konsoli wpisać: `ansible-playbook install_docker.yml`
+5. w konsoli wpisać: `ansible-playbook build_site.yml`
+6. Zostanie się poproszonym o wpisanie swojego imienia
+7. W przypadku zapytania o hasło (TASK [upload the site directory to the docker host]) wpisać: vagrant
+8. Na końcu w ramach tasku *get the port to go to* wyświetla się komunikat pod jaki adres się udać np: `To see the page, visit 192.168.33.40:32773`
+9. Udać się pod wskazany adres. Powinno się zobaczyć tam stronę z imieniem podanym w kroku 6.

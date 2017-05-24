@@ -1,6 +1,7 @@
 ---
 - name: Build an image by running ansible in a container
   hosts: vagrant
+  become: yes
 
   tasks:
     - name: create a unique temp container name

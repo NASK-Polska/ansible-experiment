@@ -1,6 +1,7 @@
 ---
 - name: Build an image by running ansible in a container (improved)
   hosts: vagrant
+  become: yes
 
   tasks:
     - name: check for existence of our base image

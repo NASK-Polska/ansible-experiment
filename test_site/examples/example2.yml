@@ -10,8 +10,8 @@
       command: docker build -t built-by-ansible:ex2 /tmp/site
 
     - name: run the site in a docker container
-      docker:
-        name: site2
-        image: "built-by-ansible:ex2"
-        state: reloaded
-        publish_all_ports: yes
+      docker_container:
+        name: test_site
+        image: "built-by-ansible:ex3"
+        state: started
+        published_ports: all
