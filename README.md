@@ -196,18 +196,32 @@ Jak widać Role mogą mieć własne szablony, pliki i zmienne. Co może być wyk
 
 ## Wnioski
 
-- użycie gotowego załatwia updaty wersji
-
 Zaletą oparcia się na produkcyjnym module takim jak Ansible jest zapewnienie sobie aktualizacji do najnowszych wersji. W przypadku oparcia się tylko o API Dockera należałoby przepisywać kod w przypadku sporych zmian w API.
 
+Ansible udostępnia [pythonowe API](http://docs.ansible.com/ansible/dev_guide/developing_api.html) jednak zaznacza, że głównie spełniać ma ono potrzeby CLI i w związku z tym nie ma gwarancji, że w przyszłości nie dojdzie do znaczących zmian.  
+Powyższe kieruje mnie w stronę propozycji by webowy UI konfiguratora na naciśnięcie np. przycisku *INSTALUJ* uruchamiał skrypty (naszego autorstwa), które będą odpowiedzialne za wykonywanie ansibla z odpowiednimi parametrami, zarządzanie rolami, a także wszelkimi potrzebnymi zadaniami. Te skrypty mogłyby spełniać rolę "zarządcy instancji", o którym mowa jest w pliku *Funkcje backendu konfiguratora*.
 
+Dodatkowo wydaje się, że rozwiązanie *Aplikacje jako Role* będzie łatwo testowalne. NASK może utrzymywać testową instancję w chmurze i wydawać certyfikacje tym aplikacjom, które pomyślnie przeszły proces konfiguracji na instancji testowej (dodajmy, że można by w przyszłości stworzyć Playbooki do wykonywania takich testów automatycznie).
 
-- to jest właśnie "zarządca instancji"
-- można korzystać z API, ale nie jest stabilne
-- serwis jako rola ułatwiaja testowanie
-- co zrobić z sekcją "publish"?
+Otwarte pozostaje pytanie co zrobić z sekcją `provides` pliku `parameters.json`, na którą nie ma domyślnie miejsca w strukturze katalogowej ansiblowej roli.  
+Moją propozycją byłoby w tym wypadku umieszczenie jej w zmiennych (`vars/main.yml`) jako słownik (taki sam jak w paramters.json) z domyślnymi wartościami (które nie ulegną zmianie, zostaną po prostu sparsowane przez Django, przy tworzeniu obiektów).
 
-Otwartym pozostaje problem mapowania sekcji publish dotychczasowego pliku parametryzacyjnego 
+### Odpowiedzi na pytania eksperymentalne
+
+1. *Jak będzie wyglądać intergracja Ansible z webowym UI konfiguratora?*
+    - *Jakie są różnice pomiędzy powyższym sposobem integracji a modelem aktualnie realizowanym (który jest nakładką na docker/docker-compose)?*
+        - ...
+    - *Czy i jak zmienią się aktualnie używane w konfiguratorze modele?*
+        - możliwe, że należałoby dodać obiekt Role, bądź Var, do reprezentacji ansiblowej roli.
+2. *Czy Ansible będzie się umiał zająć zarządzaniem użytkownikami w BD?*
+    - Tak 
+3. *Wykorzystując docker-compose mamy problem z tym, że modyfikacja jednego serwisu wymaga restartu wszystkich. (docker-compose down; create new compose file; docker-compose up; ) Czy Ansible jest pod tym względem lepsze?*
+    - Wydaje się, że ansible będzie zmieniał automatycznie stan gdy dojdzie nowy kontener, nie mam jednak pewności co do samego restartu platformy (**należałoby zbadać głębiej**)
+4. *Jak można się komunikować z Ansible? Pisze sie skrypty w plikach czy jest jakieś inne API?*
+    - Można korzystać z wiersza poleceń, pisać skrypty, API jest choć niestabilne.
+5. *Czy plik parametryzacyjny (*parameters.json*) można zastąpić odpowiednim Playbookiem bądź Rolą?*
+    - Da się. W mojej opini zastąpienie go Rolą jest efektywnym i eleganckim rozwiązaniem. 
+
 
 ### Rekomendacja
 
