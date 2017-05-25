@@ -39,7 +39,7 @@ Zalety Ansible:
     - Brak dodatkowego oprogramowania
     - Brak skomplikowanych uaktualnień
 - YAML
-    - Przyjazna i przejrzysta składnia (*YAML ain't a markup language*)
+    - Przyjazna i przejrzysta składnia (*YAML Ain't a Markup Language*)
     - Nie wymaga doświadczenia programistycznego
 - Wbudowane zabezpieczenia ([Ansible Vault](http://docs.ansible.com/ansible/playbooks_vault.html))
 - Modularność => rozszerzalność
@@ -223,7 +223,7 @@ W tej sekcji omówione są wybrane pliki składające się na repozytorium.
 4. Otwarte pozostaje pytanie co zrobić z sekcją `provides` pliku `parameters.json`, na którą nie ma domyślnie miejsca w strukturze katalogowej ansiblowej roli.
     - Moją propozycją byłoby w tym wypadku umieszczenie jej w zmiennych (`vars/main.yml`) jako słownik (taki sam jak w paramters.json) z domyślnymi wartościami (które nie ulegną zmianie, zostaną po prostu sparsowane przez Django, przy tworzeniu obiektów).
 
-5. Wykorzystanie Anible nakłada na nas obciążenie w postaci wymogu zainstalowanego SSH i Pythona na jednym managerze w Docker Swarmie. Być może jest to warunek, który dla NASKu nie jest problematyczny (**zapytać NASK**)
+5. Wykorzystanie Anible nakłada na nas obciążenie w postaci wymogu zainstalowanego SSH i Pythona na jednym managerze w Docker Swarmie. Być może jest to warunek, który dla NASKu nie jest problematyczny.
 
 ### Odpowiedzi na pytania eksperymentalne
 
@@ -235,7 +235,7 @@ W tej sekcji omówione są wybrane pliki składające się na repozytorium.
 2. *Czy Ansible będzie się umiał zająć zarządzaniem użytkownikami w BD?*
     - Tak 
 3. *Wykorzystując docker-compose mamy problem z tym, że modyfikacja jednego serwisu wymaga restartu wszystkich. (docker-compose down; create new compose file; docker-compose up; ) Czy Ansible jest pod tym względem lepsze?*
-    - Wydaje się, że ansible będzie zmieniał automatycznie stan gdy dojdzie nowy kontener, nie mam jednak pewności co do samego restartu platformy (**należałoby zbadać głębiej**)
+    - Wydaje się, że ansible będzie zmieniał automatycznie stan gdy dojdzie nowy kontener, nie mam jednak pewności co do samego restartu platformy.
 4. *Jak można się komunikować z Ansible? Pisze sie skrypty w plikach czy jest jakieś inne API?*
     - Można korzystać z wiersza poleceń, pisać skrypty, API jest choć niestabilne.
 5. *Czy plik parametryzacyjny (*parameters.json*) można zastąpić odpowiednim Playbookiem bądź Rolą?*
@@ -244,6 +244,12 @@ W tej sekcji omówione są wybrane pliki składające się na repozytorium.
 
 ### Rekomendacja
 
+Na pewno trzeba wykonać jeszcze dwie rzeczy:
+
+- *ad* pytanie eksperymentalne 3): zapoznać się z dokumentacją docker_service
+- *ad* wniosek 5): Zapytać NASK jak są elastyczni w temacie maszyn dla Dockera.
+ 
+Skłaniam się ku pozytywnej rekomendacji.
 
 
 ## Odtworzenie eksperymentu
