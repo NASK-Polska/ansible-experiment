@@ -177,7 +177,7 @@ Może to być wykorzystane w architekturze konfiguratora: może każda paczka po
 - Python używany do zbudowania egzekucji
 - SSH do wykonania zadań
 
-![graph/ansible schema](ansible_schema.png)
+![graph/ansible schema](graph/ansible_schema.png)
 
 źródło: https://app.pluralsight.com/library/courses/hands-on-ansible
 
