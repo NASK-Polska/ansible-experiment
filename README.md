@@ -17,7 +17,7 @@ Eksperyment polega na stworzeniu architektury (playbooka i ról) [Ansible](https
 
 #### Efekty:
 
-1. Decyzja odnoście użycia programu Ansible przy tworzeniu konfiguratora instancjii.
+1. Rekomendacja odnoście użycia programu Ansible przy tworzeniu konfiguratora instancjii.
 2. Zarys części architektury konfiguratora wykorzystującej Ansible (w przypadku pozytywnej decyzji).
 
 ## Przebieg eksperymentu
@@ -41,36 +41,147 @@ Zalety Ansible:
 - YAML
     - Przyjazna i przejrzysta składnia (*YAML ain't a markup language*)
     - Nie wymaga doświadczenia programistycznego
-- Wbudowane security ([Ansible Vault](http://docs.ansible.com/ansible/playbooks_vault.html))
+- Wbudowane zabezpieczenia ([Ansible Vault](http://docs.ansible.com/ansible/playbooks_vault.html))
 - Modularność => rozszerzalność
 
 #### Architektura
 
+Warto w tym miejscu wprowadzić rozróżnienie na serwer kontrolujący i serwer zdalny. Pierwszy jest maszyną, która zawiera katalog z plikami i inicjuję Ansible; drugi jest maszyną, na której zachodzą procesy kontrolowane przez Ansible.
 
+**Wymagania systemowe:**
+
+-  serwer kontrolujący:
+    - Python 2.6+
+    - System operacyjny typu \*NIX (Linux/Unix/Mac). 
+- serwer zdalny:
+    - *NIX: 
+        - Python2.5+ 
+        - SSH
+    - Windows:
+        - Remote Powershell
+
+
+#### Proces egzekucji
+
+Pliki `.yml` definiujące zadania, które mają być wykonane na wyspecyfikowanych serwerach zdalnych tłumaczone są na paczkę języka Python która następnie transferowana jest po SSH na serwer zdalny tam zapisywane w folderze /tmp i wykonywana. Po wykonaniu usuwane są wszystkie Ansiblowe pliki z serwera zdalnego i zwracany jest raport z egzekucji. W przypadku wystąpienia błędów egzekucja paczki jest przerywana.
+
+Ansible wywoływać można także z wiersza poleceń.
+
+**Python 3**
+
+W przypadku, gdy serwer lokalny domyślnie wykonuje Pythona 3+ można wyspecyfikować w definicji *hosta* ścieżkę do odpowiedniego interpreta.
+Warto też dodać, że w wersji 2.2 prezentowany jest już wstępny support dla Pythona 3, za czym można przewidywać, że niedługo Ansible będzie Python *agnostic*.
 
 #### Inwentarz
 
-Inwenatarz to plik (typowe nazewnictwo: `hosts` lub `inventory`), w którym specyfikuje się zdalne maszyny, na których wykonywane będą operacje.
+Inwenatarz to plik (typowe nazywany `hosts` lub `inventory`), w którym specyfikuje się zdalne maszyny, na których wykonywane będą operacje.
 
 Przewidziana przez Ansible syntaktyka pozwala na złożone grupowanie serwerów i pzypisywanie im zmiennych.
 
 #### Konfiguracja
 
-W pliku konfiguracyjnym `ansible.cfg` wyspecyfikować można lokalne atrybuty.
+W pliku konfiguracyjnym `ansible.cfg` wyspecyfikować można globalne ustawienia np. wskzać sćieżkę do Inwentarza. 
 
 #### Moduły
 
+Moduły wykorzystywane są do realizacji konkretnych zadań na serwerze zdalnym. Np. moduł `apt` służy do zarządzania programami na serwerze debianowym. Np. aby upewnić się, że serwer Apache jest zainstalowany:
+
+
+```yaml
+tasks:
+  - name: Ensure Apache is installed
+    apt: name=httpd state=present
+```
+
+Wbudowanych w Ansible jest ponad 1000 modułów. Można także pisać własne. 
+
 #### Playbooki
+
+Klucz `tasks` powyżej jest częścią większego pliku, który nazywany jest *Playbookiem*. Playbook składa się z zagrywek (ang. *plays*), z których każda zaadresowana jest do wybranych *hostów* (serwerów zdalnych) i składa się z jednego bądź więcej zadań (ang. *tasks*). Każde zadanie korzysta z jednego modułu, który przyjmuje pewne argumenty. Oprócz tego *taski* mogą powiadamiać *handlery*, które wykonają się pod koniec playbooka. Np. gdy nasza zagrywka składa się z wprowadzania zmian w plikach konfiguracyjnych, chcielibyśmy upewnić się, że Apache zostanie zrestartowane. 
+
+Przykładowy *playbook* składający się z jednej zagrywki i czterech zadań wygląda tak:
+
+```yaml
+- name: Deploy site with Apache
+  hosts: webservers
+  become: yes
+  become_metho: sudo
+  vars:
+    doc_dir: /ansible/
+    doc_root: /var/www/html/
+    http_port: 80
+    max_clients: 5
+    user_name: Guest
+  
+  tasks:
+  - name: Ensure Apache is installed 
+    yum: name=httpd state=present 
+    when: ansible_os_family == "RedHat" # This will run conditionally based on
+                                        # the Linux version.
+
+  - name: Start Apache Services
+    service: name=httpd enabled=yes state=started
+
+  - name: Deploy configuration File                                   # template module copies files after 
+    template: src=templates/httpd.j2 dest=/etc/httpd/conf/httpd.conf  # proccessing them with Jinja2
+    notify:
+      - Restart Apache  # Notify the handler
+
+  - name: Copy Site Files
+    template: src=templates/index.j2 dest={{ doc_root }}/index.html
+  
+  handlers:
+      - name: Restart Apache
+        service: name=httpd state=restarted 
+
+```
+
+Warto zwrócić uwagę na klucz `vars`, który specyfikuje 4 wartości. Jedna z nich używana jest w samym playbooku (`doc_root`) a trzy pozostałe używane są w plikach żródłowych przetwarzanych przez moduł `template`. 
+
+Wartościami zmiennych mogą być stringi, inty, listy, a także słowniki.
 
 #### Role
 
-#### Schemat
+Celem ról jest wyabstrachowanie zadań i handlerów składających się na konkretne funkcjonalności w celu zwiększenia ponownego użycia tych samych kawałków kodu.
+
+[Ansible Galaxy](https://galaxy.ansible.com/) jest odpowiednikiem DockerHuba -- internetowym repozytorium do pobierania i dzielenia się rolami.
+
+po wykonaniu komendy `ansible-galaxy init moja_rola` w katalogu `moja_rola` zostanie utowrzona następująca struktura:
+
+```
+├── README.md  
+├── defaults
+│ └── main.yml
+├── files
+├── handlers
+│ └── main.yml
+├── meta
+│ └── main.yml
+├── tasks
+│ └── main.yml
+├── templates
+└── vars
+└── main.yml
+```
+
+Jak widać Role mogą mieć własne szablony, pliki i zmienne. Co może być wykorzystane przy architekturze konfiguratora. (Może każda paczka powinna zawierać ansiblową rolę, w której to dostawca mógłby zadbać o wszelkie kontekstualne zadania, a od administratora instancji pobrać tylko odpowiednie zmienne predefiniowane w pliku `vars/main.yml`.)
+
+#### Podsumowanie
+
+- Inwenatrz mapuje serwery zdalne
+- Konfiguracja ustawia parametry Ansible
+- Moduły definiują akcję
+- Playbooki koordynują wiele zadań
+- Python używany do zbudowania egzekucji
+- SSH do wykonania zadań
 
 ![ansible schema](ansible_schema.png)
 
 źródło: https://app.pluralsight.com/library/courses/hands-on-ansible
 
 ### Struktura repozytorium
+
+
 
 ### Wybrane źródła
 
@@ -85,7 +196,22 @@ W pliku konfiguracyjnym `ansible.cfg` wyspecyfikować można lokalne atrybuty.
 
 ## Wnioski
 
+- użycie gotowego załatwia updaty wersji
+
+Zaletą oparcia się na produkcyjnym module takim jak Ansible jest zapewnienie sobie aktualizacji do najnowszych wersji. W przypadku oparcia się tylko o API Dockera należałoby przepisywać kod w przypadku sporych zmian w API.
+
+
+
+- to jest właśnie "zarządca instancji"
+- można korzystać z API, ale nie jest stabilne
+- serwis jako rola ułatwiaja testowanie
+- co zrobić z sekcją "publish"?
+
+Otwartym pozostaje problem mapowania sekcji publish dotychczasowego pliku parametryzacyjnego 
+
 ### Rekomendacja
+
+
 
 ## Odtworzenie eksperymentu
 
@@ -96,15 +222,16 @@ W pliku konfiguracyjnym `ansible.cfg` wyspecyfikować można lokalne atrybuty.
 
 #### Proces
 
-1. Sklonować repozytorium:
-2. przejść do katalogu: `cd sciezka/do/repo`
-3. w konsoli wpisać: `vagrant up`
-4. w konsoli wpisać: `ansible-galaxy install -r requirements.yml`
-5. w konsoli wpisać: `ansible-playbook install_docker.yml`
-6. w konsoli wpisać: `ansible-playbook build_site.yml`
-7. Zostanie się poproszonym o wpisanie swojego imienia
-8. W przypadku zapytania o hasło (*TASK [upload the site directory to the docker host]*) wpisać: `vagrant`
-9. Na końcu w ramach tasku *get the port to go to* wyświetla się komunikat pod jaki adres się udać np: `To see the page, visit 192.168.33.40:32773`
-10. Udać się pod wskazany adres. Powinno się zobaczyć tam stronę z imieniem podanym w kroku 7.
+- Setup:
+    1. Sklonować repozytorium:
+    2. przejść do katalogu: `cd /sciezka/do/repo`
+    3. w konsoli wpisać: `vagrant up` (zbootowanie maszyn wirtualnych)
+    4. w konsoli wpisać: `ansible-galaxy install -r requirements.yml` (pobranie roli odpowiedzialnej za instalację Dockera)
+    5. w konsoli wpisać: `ansible-playbook install_docker.yml` (upewnia się, że Docker jest zainstalowany na hoście)
 
-Po wykonaniu powyższych kroków, by uruchomić eksperyment ponownie wystarczy zacząć od kroku 6.
+- Eksperyment:
+    1. w konsoli wpisać: `ansible-playbook build_site.yml`
+    2. Zostanie się poproszonym o wpisanie swojego imienia
+    3. W przypadku zapytania o hasło (*TASK [upload the site directory to the docker host]*) wpisać: `vagrant`
+    4. Na końcu w ramach tasku *get the port to go to* wyświetla się komunikat pod jaki adres się udać np: `To see the page, visit 192.168.33.40:32773`
+    5. Udać się pod wskazany adres. Powinno się zobaczyć tam stronę z imieniem podanym w kroku 7.
