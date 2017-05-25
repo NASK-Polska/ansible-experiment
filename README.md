@@ -183,10 +183,22 @@ Może to być wykorzystane w architekturze konfiguratora: może każda paczka po
 
 ### Struktura repozytorium
 
-W tej sekcji chciałbym omówić wybrane pliki składające się na repozytorium.
+W tej sekcji omówione są wybrane pliki składające się na repozytorium.
 
-- Katalog główny:
-    - Vagrantfile -- plik konfiguracyjny dla programu Vagrant specyfikujący wirtualne maszyny.
+- Katalog `ansible-eksperyment`:
+    - `ansible.cfg` -- plik konfiguracyjny ansible
+    - `build_site.yml` -- playbook uruchamiający kontener z dockerem i odpowiednio przetworzonym plikiem `index.html`
+    - `hosts` -- Inwenatrz specyfikujący cztery maszyny postawione przez Vagranta
+    - `install_docker.yml` -- playbook instalujący dockera na hoście `test1`
+    - `requirements.yml` -- analogicznie do pipa tylko dla ansible-galaxy
+    - `snippets.yml` -- przykładowe taski ansible
+    - `Vagrantfile --` plik konfiguracyjny dla programu Vagrant specyfikujący wirtualne maszyny.
+- Katalog `dockerizing`:
+    - przykładowe proste playbooki do zarządzania kontenerami
+- Katalog `no-docker`:
+    - przykładowa struktura do odpalenia serwera Apache bez dockera i zarządzanie serwerem bazodanowym z MySQL.
+    - `playbook_example.yml` -- czysty playbook nie zawierający ról z promptem do użytkownika o zmienną.
+    - `site.yml` - playbook wykorzystujący role
 
 ### Wybrane źródła
 
