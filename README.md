@@ -164,7 +164,9 @@ po wykonaniu komendy `ansible-galaxy init moja_rola` w katalogu `moja_rola` zost
 └── main.yml
 ```
 
-Jak widać Role mogą mieć własne szablony, pliki i zmienne. Co może być wykorzystane przy architekturze konfiguratora. (Może każda paczka powinna zawierać ansiblową rolę, w której to dostawca mógłby zadbać o wszelkie kontekstualne zadania, a od administratora instancji pobrać tylko odpowiednie zmienne predefiniowane w pliku `vars/main.yml`.)
+Jak widać Role mogą mieć własne szablony, pliki i zmienne. 
+
+Może to być wykorzystane w architekturze konfiguratora: może każda paczka powinna zawierać ansiblową rolę, w której to dostawca mógłby zadbać o wszelkie kontekstualne zadania, a od administratora instancji pobrać tylko odpowiednie zmienne predefiniowane w pliku `vars/main.yml`?
 
 #### Podsumowanie
 
@@ -196,15 +198,17 @@ Jak widać Role mogą mieć własne szablony, pliki i zmienne. Co może być wyk
 
 ## Wnioski
 
-Zaletą oparcia się na produkcyjnym module takim jak Ansible jest zapewnienie sobie aktualizacji do najnowszych wersji. W przypadku oparcia się tylko o API Dockera należałoby przepisywać kod w przypadku sporych zmian w API.
+1. Zaletą oparcia się na produkcyjnym module takim jak Ansible jest zapewnienie sobie aktualizacji do najnowszych wersji. W przypadku oparcia się tylko o API Dockera należałoby przepisywać kod w przypadku sporych zmian w API.
 
-Ansible udostępnia [pythonowe API](http://docs.ansible.com/ansible/dev_guide/developing_api.html) jednak zaznacza, że głównie spełniać ma ono potrzeby CLI i w związku z tym nie ma gwarancji, że w przyszłości nie dojdzie do znaczących zmian.  
-Powyższe kieruje mnie w stronę propozycji by webowy UI konfiguratora na naciśnięcie np. przycisku *INSTALUJ* uruchamiał skrypty (naszego autorstwa), które będą odpowiedzialne za wykonywanie ansibla z odpowiednimi parametrami, zarządzanie rolami, a także wszelkimi potrzebnymi zadaniami. Te skrypty mogłyby spełniać rolę "zarządcy instancji", o którym mowa jest w pliku *Funkcje backendu konfiguratora*.
+2. Ansible udostępnia [pythonowe API](http://docs.ansible.com/ansible/dev_guide/developing_api.html) jednak zaznacza, że głównie spełniać ma ono potrzeby CLI i w związku z tym nie ma gwarancji, że w przyszłości nie dojdzie do znaczących zmian.
+    - Powyższe kieruje mnie w stronę propozycji by webowy UI konfiguratora na naciśnięcie np. przycisku *INSTALUJ* uruchamiał skrypty (naszego autorstwa), które będą odpowiedzialne za wykonywanie ansibla z odpowiednimi parametrami, zarządzanie rolami, a także wszelkimi potrzebnymi zadaniami. Te skrypty mogłyby spełniać rolę "zarządcy instancji", o którym mowa jest w pliku *Funkcje backendu konfiguratora*.
 
-Dodatkowo wydaje się, że rozwiązanie *Aplikacje jako Role* będzie łatwo testowalne. NASK może utrzymywać testową instancję w chmurze i wydawać certyfikacje tym aplikacjom, które pomyślnie przeszły proces konfiguracji na instancji testowej (dodajmy, że można by w przyszłości stworzyć Playbooki do wykonywania takich testów automatycznie).
+3. Dodatkowo wydaje się, że rozwiązanie *Aplikacje jako Role* będzie łatwo testowalne. NASK może utrzymywać testową instancję w chmurze i wydawać certyfikacje tym aplikacjom, które pomyślnie przeszły proces konfiguracji na instancji testowej (dodajmy, że można by w przyszłości stworzyć Playbooki do wykonywania takich testów automatycznie).
 
-Otwarte pozostaje pytanie co zrobić z sekcją `provides` pliku `parameters.json`, na którą nie ma domyślnie miejsca w strukturze katalogowej ansiblowej roli.  
-Moją propozycją byłoby w tym wypadku umieszczenie jej w zmiennych (`vars/main.yml`) jako słownik (taki sam jak w paramters.json) z domyślnymi wartościami (które nie ulegną zmianie, zostaną po prostu sparsowane przez Django, przy tworzeniu obiektów).
+4. Otwarte pozostaje pytanie co zrobić z sekcją `provides` pliku `parameters.json`, na którą nie ma domyślnie miejsca w strukturze katalogowej ansiblowej roli.
+    - Moją propozycją byłoby w tym wypadku umieszczenie jej w zmiennych (`vars/main.yml`) jako słownik (taki sam jak w paramters.json) z domyślnymi wartościami (które nie ulegną zmianie, zostaną po prostu sparsowane przez Django, przy tworzeniu obiektów).
+
+5. Wykorzystanie Anible nakłada na nas obciążenie w postaci wymogu zainstalowanego SSH i Pythona na jednym managerze w Docker Swarmie. Być może jest to warunek, który dla NASKu nie jest problematyczny (**zapytać NASK**)
 
 ### Odpowiedzi na pytania eksperymentalne
 
