@@ -177,13 +177,16 @@ Może to być wykorzystane w architekturze konfiguratora: może każda paczka po
 - Python używany do zbudowania egzekucji
 - SSH do wykonania zadań
 
-![ansible schema](ansible_schema.png)
+![graph/ansible schema](ansible_schema.png)
 
 źródło: https://app.pluralsight.com/library/courses/hands-on-ansible
 
 ### Struktura repozytorium
 
+W tej sekcji chciałbym omówić wybrane pliki składające się na repozytorium.
 
+- Katalog główny:
+    - Vagrantfile -- plik konfiguracyjny dla programu Vagrant specyfikujący wirtualne maszyny.
 
 ### Wybrane źródła
 
