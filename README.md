@@ -266,8 +266,13 @@ Na pewno trzeba wykonać jeszcze dwie rzeczy:
 - *ad* pytanie eksperymentalne 3): zapoznać się z dokumentacją docker_service
 - *ad* wniosek 5): Zapytać NASK jak są elastyczni w temacie maszyn dla Dockera.
  
-Skłaniam się ku pozytywnej rekomendacji.
-
+Nie rekomenduje się wykorzystania Ansible w procesie konfiguracji
+instancji. Decyzja wynika głównie z ograniczeń które Ansible wprowadza
+(zarządzanie tylko maszynami, które mają SSH i pythona), z wzrostu
+złożoności wynikającego z wprowadzenia kolejnego komponentu oraz z tego,
+że funkcje, które wyglądają na skomplikowane do zaimplementowania
+(system specyfikowania wymaganych parametrów, system zależności pomiędzy
+aplikacjami) nie są dostarczane przez Ansible.
 
 ## Odtworzenie eksperymentu
 
