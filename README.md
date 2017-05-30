@@ -214,6 +214,7 @@ W tej sekcji omówione są wybrane pliki składające się na repozytorium.
 ## Wnioski
 
 1. Zaletą oparcia się na produkcyjnym module takim jak Ansible jest zapewnienie sobie aktualizacji do najnowszych wersji. W przypadku oparcia się tylko o API Dockera należałoby przepisywać kod w przypadku sporych zmian w API.
+    - Przepisywania kodu można uniknąć poprzez wykorzystanie bibliotek przykrywających API (np. docker-py).
 
 2. Ansible udostępnia [pythonowe API](http://docs.ansible.com/ansible/dev_guide/developing_api.html) jednak zaznacza, że głównie spełniać ma ono potrzeby CLI i w związku z tym nie ma gwarancji, że w przyszłości nie dojdzie do znaczących zmian.
     - Powyższe kieruje mnie w stronę propozycji by webowy UI konfiguratora na naciśnięcie np. przycisku *INSTALUJ* uruchamiał skrypty (naszego autorstwa), które będą odpowiedzialne za wykonywanie ansibla z odpowiednimi parametrami, zarządzanie rolami, a także wszelkimi potrzebnymi zadaniami. Te skrypty mogłyby spełniać rolę "zarządcy instancji", o którym mowa jest w pliku *Funkcje backendu konfiguratora*.
