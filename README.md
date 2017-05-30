@@ -254,8 +254,10 @@ W tej sekcji omówione są wybrane pliki składające się na repozytorium.
 4. *Jak można się komunikować z Ansible? Pisze sie skrypty w plikach czy jest jakieś inne API?*
     - Można korzystać z wiersza poleceń, pisać skrypty, API jest choć niestabilne.
 5. *Czy plik parametryzacyjny (*parameters.json*) można zastąpić odpowiednim Playbookiem bądź Rolą?*
-    - Da się. W mojej opini zastąpienie go Rolą jest efektywnym i eleganckim rozwiązaniem. 
-
+    - Da się częściowo. Rola może zawierać templatki plików i opis
+      uruchamiania aplikacji, jednak są rzeczy, które będą musiały być w
+      pliku parametryzacyjnym: opis wymaganych parametrów i opis
+      udostępnianych API.
 
 ### Rekomendacja
 
