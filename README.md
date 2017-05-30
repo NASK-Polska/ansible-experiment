@@ -223,7 +223,15 @@ W tej sekcji omówione są wybrane pliki składające się na repozytorium.
 4. Otwarte pozostaje pytanie co zrobić z sekcją `provides` pliku `parameters.json`, na którą nie ma domyślnie miejsca w strukturze katalogowej ansiblowej roli.
     - Moją propozycją byłoby w tym wypadku umieszczenie jej w zmiennych (`vars/main.yml`) jako słownik (taki sam jak w paramters.json) z domyślnymi wartościami (które nie ulegną zmianie, zostaną po prostu sparsowane przez Django, przy tworzeniu obiektów).
 
-5. Wykorzystanie Anible nakłada na nas obciążenie w postaci wymogu zainstalowanego SSH i Pythona na jednym managerze w Docker Swarmie. Być może jest to warunek, który dla NASKu nie jest problematyczny.
+5. Architektura Ansible przewiduje zarządzanie hostami, które są
+   maszynami fizycznymi lub wirtualnymi. Takie założenie nie do końca
+   pasuje do architektury platformy, w której konfigurator zarządza
+   Docker Swarmem abstrahując od niższych warstw (np. pojęcia maszyny).
+    - Wykorzystanie Anible nakłada na nas obciążenie w postaci wymogu
+      zainstalowanego SSH i Pythona na jednym managerze w Docker
+      Swarmie. W niektórych przypadkach może to ograniczać możliwości
+      uruchomienia instancji. (Np. trudnym będzie użycie Dockera
+      uruchomionego wewnątrz kontenera Dockera.)
 
 ### Odpowiedzi na pytania eksperymentalne
 
