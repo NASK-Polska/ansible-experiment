@@ -10,11 +10,12 @@ Eksperyment polega na stworzeniu architektury (playbooka i ról) [Ansible](https
 1. Jak będzie wyglądać integracja Ansible z webowym UI konfiguratora?
     - Jakie są różnice w integracji w przypadkach systemu używającego
       Ansible i systemu nieużywającego Ansible?
-    - Czy i jak zmienią się aktualnie używane w konfiguratorze modele?
 2. Czy Ansible będzie się umiał zająć zarządzaniem użytkownikami w BD?
 3. Wykorzystując docker-compose mamy problem z tym, że modyfikacja jednego serwisu wymaga restartu wszystkich (`docker-compose down; create new compose file; docker-compose up;`). Czy Ansible jest pod tym względem lepsze?
 4. Jak można się komunikować z Ansible? Pisze się skrypty w plikach czy jest jakieś inne API?
 5. Czy plik parametryzacyjny (*parameters.json*) można zastąpić odpowiednim Playbookiem bądź Rolą?
+6. Czy konfigurator zbudowany z użyciem Ansible musi mieć stan (bazę
+   danych)? Jeśli tak, to jakiego typu dane będą przechowywane w bazie?
 
 #### Efekty:
 
@@ -250,8 +251,6 @@ W tej sekcji omówione są wybrane pliki składające się na repozytorium.
           serwer API. API w obydwu przypadkach wygląda bardzo podobnie:
           musi obsługiwać operacje instalacji, usunięcia i konfiguracji
           parametrów aplikacji.
-    - *Czy i jak zmienią się aktualnie używane w konfiguratorze modele?*
-        - możliwe, że należałoby dodać obiekt Role, bądź Var, do reprezentacji ansiblowej roli.
 2. *Czy Ansible będzie się umiał zająć zarządzaniem użytkownikami w BD?*
     - Tak 
 3. *Wykorzystując docker-compose mamy problem z tym, że modyfikacja jednego serwisu wymaga restartu wszystkich (`docker-compose down; create new compose file; docker-compose up;`). Czy Ansible jest pod tym względem lepsze?*
@@ -263,6 +262,11 @@ W tej sekcji omówione są wybrane pliki składające się na repozytorium.
       uruchamiania aplikacji, jednak są rzeczy, które będą musiały być w
       pliku parametryzacyjnym: opis wymaganych parametrów i opis
       udostępnianych API.
+6. *Czy konfigurator zbudowany z użyciem Ansible musi mieć stan (bazę
+   danych)? Jeśli tak, to jakiego typu dane będą przechowywane w bazie?*
+    - Tak, konfigurator musi mieć stan - musi przechowywać informację o
+      typie parametrów poszczególnych zainstalowancyh aplikacji, aby
+      umożliwić walidację wartości w przypadku ich zmiany.
 
 ### Rekomendacja
 
