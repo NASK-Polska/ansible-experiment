@@ -7,24 +7,24 @@ Eksperyment polega na stworzeniu architektury (playbooka i ról) [Ansible](https
 
 #### Pytania eksperymentalne:
 
-1. Jak będzie wyglądać intergracja Ansible z webowym UI konfiguratora?
+1. Jak będzie wyglądać integracja Ansible z webowym UI konfiguratora?
     - Jakie są różnice pomiędzy powyższym sposobem integracji a modelem aktualnie realizowanym (który jest nakładką na docker/docker-compose)?
     - Czy i jak zmienią się aktualnie używane w konfiguratorze modele?
 2. Czy Ansible będzie się umiał zająć zarządzaniem użytkownikami w BD?
-3. Wykorzystując docker-compose mamy problem z tym, że modyfikacja jednego serwisu wymaga restartu wszystkich. (docker-compose down; create new compose file; docker-compose up; ) Czy Ansible jest pod tym względem lepsze?
-4. Jak można się komunikować z Ansible? Pisze sie skrypty w plikach czy jest jakieś inne API?
+3. Wykorzystując docker-compose mamy problem z tym, że modyfikacja jednego serwisu wymaga restartu wszystkich (`docker-compose down; create new compose file; docker-compose up;`). Czy Ansible jest pod tym względem lepsze?
+4. Jak można się komunikować z Ansible? Pisze się skrypty w plikach czy jest jakieś inne API?
 5. Czy plik parametryzacyjny (*parameters.json*) można zastąpić odpowiednim Playbookiem bądź Rolą?
 
 #### Efekty:
 
-1. Rekomendacja odnoście użycia programu Ansible przy tworzeniu konfiguratora instancjii.
+1. Rekomendacja odnoście użycia programu Ansible przy tworzeniu konfiguratora instancji.
 2. Zarys części architektury konfiguratora wykorzystującej Ansible (w przypadku pozytywnej decyzji).
 
 ## Przebieg eksperymentu
 
 ### O Ansible (teoretycznie)
 
-Ansible jest narzędziem umożliwiającym automatyzację i orchiestryzację zadań związanych ze zdalnym zarządzaniem serwerami.
+Ansible jest narzędziem umożliwiającym automatyzację i orkiestryzację zadań związanych ze zdalnym zarządzaniem serwerami.
 
 Szczególnie warto zwrócić uwagę na dwie jego cechy:
 
@@ -69,18 +69,18 @@ Ansible wywoływać można także z wiersza poleceń.
 
 **Python 3**
 
-W przypadku, gdy serwer lokalny domyślnie wykonuje Pythona 3+ można wyspecyfikować w definicji *hosta* ścieżkę do odpowiedniego interpreta.
+W przypadku, gdy serwer lokalny domyślnie wykonuje Pythona 3+ można wyspecyfikować w definicji *hosta* ścieżkę do odpowiedniego interpretera.
 Warto też dodać, że w wersji 2.2 prezentowany jest już wstępny support dla Pythona 3, za czym można przewidywać, że niedługo Ansible będzie Python *agnostic*.
 
 #### Inwentarz
 
 Inwenatarz to plik (typowe nazywany `hosts` lub `inventory`), w którym specyfikuje się zdalne maszyny, na których wykonywane będą operacje.
 
-Przewidziana przez Ansible syntaktyka pozwala na złożone grupowanie serwerów i pzypisywanie im zmiennych.
+Przewidziana przez Ansible syntaktyka pozwala na złożone grupowanie serwerów i przypisywanie im zmiennych.
 
 #### Konfiguracja
 
-W pliku konfiguracyjnym `ansible.cfg` wyspecyfikować można globalne ustawienia np. wskzać sćieżkę do Inwentarza. 
+W pliku konfiguracyjnym `ansible.cfg` wyspecyfikować można globalne ustawienia np. wskazać ścieżkę do Inwentarza.
 
 #### Moduły
 
@@ -93,11 +93,11 @@ tasks:
     apt: name=httpd state=present
 ```
 
-Wbudowanych w Ansible jest ponad 1000 modułów. Można także pisać własne. 
+Wbudowanych w Ansible jest ponad 1000 modułów. Można także pisać własne.
 
 #### Playbooki
 
-Klucz `tasks` powyżej jest częścią większego pliku, który nazywany jest *Playbookiem*. Playbook składa się z zagrywek (ang. *plays*), z których każda zaadresowana jest do wybranych *hostów* (serwerów zdalnych) i składa się z jednego bądź więcej zadań (ang. *tasks*). Każde zadanie korzysta z jednego modułu, który przyjmuje pewne argumenty. Oprócz tego *taski* mogą powiadamiać *handlery*, które wykonają się pod koniec playbooka. Np. gdy nasza zagrywka składa się z wprowadzania zmian w plikach konfiguracyjnych, chcielibyśmy upewnić się, że Apache zostanie zrestartowane. 
+Klucz `tasks` powyżej jest częścią większego pliku, który nazywany jest *Playbookiem*. Playbook składa się z zagrywek (ang. *plays*), z których każda zaadresowana jest do wybranych *hostów* (serwerów zdalnych) i składa się z jednego bądź więcej zadań (ang. *tasks*). Każde zadanie korzysta z jednego modułu, który przyjmuje pewne argumenty. Oprócz tego *taski* mogą powiadamiać *handlery*, które wykonają się pod koniec playbooka. Np. gdy nasza zagrywka składa się z wprowadzania zmian w plikach konfiguracyjnych, chcielibyśmy upewnić się, że Apache zostanie zrestartowane.
 
 Przykładowy *playbook* składający się z jednej zagrywki i czterech zadań wygląda tak:
 
@@ -136,20 +136,20 @@ Przykładowy *playbook* składający się z jednej zagrywki i czterech zadań wy
 
 ```
 
-Warto zwrócić uwagę na klucz `vars`, który specyfikuje 4 wartości. Jedna z nich używana jest w samym playbooku (`doc_root`) a trzy pozostałe używane są w plikach żródłowych przetwarzanych przez moduł `template`. 
+Warto zwrócić uwagę na klucz `vars`, który specyfikuje 4 wartości. Jedna z nich używana jest w samym playbooku (`doc_root`) a trzy pozostałe używane są w plikach źródłowych przetwarzanych przez moduł `template`.
 
 Wartościami zmiennych mogą być stringi, inty, listy, a także słowniki.
 
 #### Role
 
-Celem ról jest wyabstrachowanie zadań i handlerów składających się na konkretne funkcjonalności w celu zwiększenia ponownego użycia tych samych kawałków kodu.
+Celem ról jest wyabstrahowanie zadań i handlerów składających się na konkretne funkcjonalności w celu zwiększenia ponownego użycia tych samych kawałków kodu.
 
 [Ansible Galaxy](https://galaxy.ansible.com/) jest odpowiednikiem DockerHuba -- internetowym repozytorium do pobierania i dzielenia się rolami.
 
-po wykonaniu komendy `ansible-galaxy init moja_rola` w katalogu `moja_rola` zostanie utowrzona następująca struktura:
+po wykonaniu komendy `ansible-galaxy init moja_rola` w katalogu `moja_rola` zostanie utworzona następująca struktura:
 
 ```
-├── README.md  
+├── README.md
 ├── defaults
 │ └── main.yml
 ├── files
@@ -172,7 +172,7 @@ Może to być wykorzystane w architekturze konfiguratora: może każda paczka po
 
 - Inwenatrz mapuje serwery zdalne
 - Konfiguracja ustawia parametry Ansible
-- Moduły definiują akcję
+- Moduły definiują akcje
 - Playbooki koordynują wiele zadań
 - Python używany do zbudowania egzekucji
 - SSH do wykonania zadań
@@ -217,13 +217,13 @@ W tej sekcji omówione są wybrane pliki składające się na repozytorium.
     - Przepisywania kodu można uniknąć poprzez wykorzystanie bibliotek przykrywających API (np. docker-py).
 
 2. Ansible udostępnia [pythonowe API](http://docs.ansible.com/ansible/dev_guide/developing_api.html) jednak zaznacza, że głównie spełniać ma ono potrzeby CLI i w związku z tym nie ma gwarancji, że w przyszłości nie dojdzie do znaczących zmian.
-    - Powyższe kieruje mnie w stronę propozycji by webowy UI konfiguratora na naciśnięcie np. przycisku *INSTALUJ* uruchamiał skrypty (naszego autorstwa), które będą odpowiedzialne za wykonywanie ansibla z odpowiednimi parametrami, zarządzanie rolami, a także wszelkimi potrzebnymi zadaniami. Te skrypty mogłyby spełniać rolę "zarządcy instancji", o którym mowa jest w pliku *Funkcje backendu konfiguratora*.
+    - Powyższe kieruje mnie w stronę propozycji by webowy UI konfiguratora na naciśnięcie np. przycisku *INSTALUJ* uruchamiał skrypty (naszego autorstwa), które będą odpowiedzialne za wykonywanie Ansible z odpowiednimi parametrami, zarządzanie rolami, a także wszelkimi potrzebnymi zadaniami. Te skrypty mogłyby spełniać rolę "zarządcy instancji", o którym mowa jest w pliku *Funkcje backendu konfiguratora*.
 
 3. *Aplikacje jako Role* - idea jest taka, żeby każda paczka z aplikacją
    była dostarczana jako *rola*. Instalacja paczki to przypisanie roli
    do hosta będącego managerem Docker Swarma.
     - Instalacja jednej paczki wiele razy może być zrealizowana jako
-      skopiowanie zawartości katalogu reprezentujacego *rolę* do
+      skopiowanie zawartości katalogu reprezentującego *rolę* do
       katalogu z inną nazwą.
     - Wydaje się, że rozwiązanie *Aplikacje jako Role* będzie łatwo testowalne. NASK może utrzymywać testową instancję w chmurze i wydawać certyfikacje tym aplikacjom, które pomyślnie przeszły proces konfiguracji na instancji testowej (dodajmy, że można by w przyszłości stworzyć Playbooki do wykonywania takich testów automatycznie).
 
@@ -242,16 +242,16 @@ W tej sekcji omówione są wybrane pliki składające się na repozytorium.
 
 ### Odpowiedzi na pytania eksperymentalne
 
-1. *Jak będzie wyglądać intergracja Ansible z webowym UI konfiguratora?*
+1. *Jak będzie wyglądać integracja Ansible z webowym UI konfiguratora?*
     - *Jakie są różnice pomiędzy powyższym sposobem integracji a modelem aktualnie realizowanym (który jest nakładką na docker/docker-compose)?*
         - ...
     - *Czy i jak zmienią się aktualnie używane w konfiguratorze modele?*
         - możliwe, że należałoby dodać obiekt Role, bądź Var, do reprezentacji ansiblowej roli.
 2. *Czy Ansible będzie się umiał zająć zarządzaniem użytkownikami w BD?*
     - Tak 
-3. *Wykorzystując docker-compose mamy problem z tym, że modyfikacja jednego serwisu wymaga restartu wszystkich. (docker-compose down; create new compose file; docker-compose up; ) Czy Ansible jest pod tym względem lepsze?*
-    - Wydaje się, że ansible będzie zmieniał automatycznie stan gdy dojdzie nowy kontener, nie mam jednak pewności co do samego restartu platformy.
-4. *Jak można się komunikować z Ansible? Pisze sie skrypty w plikach czy jest jakieś inne API?*
+3. *Wykorzystując docker-compose mamy problem z tym, że modyfikacja jednego serwisu wymaga restartu wszystkich (`docker-compose down; create new compose file; docker-compose up;`). Czy Ansible jest pod tym względem lepsze?*
+    - Wydaje się, że Ansible będzie zmieniał automatycznie stan gdy dojdzie nowy kontener, nie mam jednak pewności co do samego restartu platformy.
+4. *Jak można się komunikować z Ansible? Pisze się skrypty w plikach czy jest jakieś inne API?*
     - Można korzystać z wiersza poleceń, pisać skrypty, API jest choć niestabilne.
 5. *Czy plik parametryzacyjny (*parameters.json*) można zastąpić odpowiednim Playbookiem bądź Rolą?*
     - Da się częściowo. Rola może zawierać templatki plików i opis
