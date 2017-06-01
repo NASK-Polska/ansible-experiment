@@ -8,7 +8,8 @@ Eksperyment polega na stworzeniu architektury (playbooka i ról) [Ansible](https
 #### Pytania eksperymentalne:
 
 1. Jak będzie wyglądać integracja Ansible z webowym UI konfiguratora?
-    - Jakie są różnice pomiędzy powyższym sposobem integracji a modelem aktualnie realizowanym (który jest nakładką na docker/docker-compose)?
+    - Jakie są różnice w integracji w przypadkach systemu używającego
+      Ansible i systemu nieużywającego Ansible?
     - Czy i jak zmienią się aktualnie używane w konfiguratorze modele?
 2. Czy Ansible będzie się umiał zająć zarządzaniem użytkownikami w BD?
 3. Wykorzystując docker-compose mamy problem z tym, że modyfikacja jednego serwisu wymaga restartu wszystkich (`docker-compose down; create new compose file; docker-compose up;`). Czy Ansible jest pod tym względem lepsze?
@@ -243,8 +244,12 @@ W tej sekcji omówione są wybrane pliki składające się na repozytorium.
 ### Odpowiedzi na pytania eksperymentalne
 
 1. *Jak będzie wyglądać integracja Ansible z webowym UI konfiguratora?*
-    - *Jakie są różnice pomiędzy powyższym sposobem integracji a modelem aktualnie realizowanym (który jest nakładką na docker/docker-compose)?*
-        - ...
+    - *Jakie są różnice w integracji w przypadkach systemu używającego
+      Ansible i systemu nieużywającego Ansible?*
+        - Nie ma znaczących różnic. W obydwu przypadkach trzeba stworzyć
+          serwer API. API w obydwu przypadkach wygląda bardzo podobnie:
+          musi obsługiwać operacje instalacji, usunięcia i konfiguracji
+          parametrów aplikacji.
     - *Czy i jak zmienią się aktualnie używane w konfiguratorze modele?*
         - możliwe, że należałoby dodać obiekt Role, bądź Var, do reprezentacji ansiblowej roli.
 2. *Czy Ansible będzie się umiał zająć zarządzaniem użytkownikami w BD?*
