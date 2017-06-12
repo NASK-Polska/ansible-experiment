@@ -241,6 +241,9 @@ W tej sekcji omówione są wybrane pliki składające się na repozytorium.
       Swarmie. W niektórych przypadkach może to ograniczać możliwości
       uruchomienia instancji. (Np. trudnym będzie użycie Dockera
       uruchomionego wewnątrz kontenera Dockera.)
+        - Można to obejść używając parametru `docker_host` - w ten
+          sposób host wykonujący zadania Ansible może być innym hostem
+          niż host będący managerem w Docker Swarmie.
 
 ### Odpowiedzi na pytania eksperymentalne
 
