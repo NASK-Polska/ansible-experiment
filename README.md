@@ -245,6 +245,12 @@ W tej sekcji omówione są wybrane pliki składające się na repozytorium.
           sposób host wykonujący zadania Ansible może być innym hostem
           niż host będący managerem w Docker Swarmie.
 
+6. Docker Swarm i serwisy - Ansible ma moduł [docker_service](https://docs.ansible.com/ansible/docker_service_module.html).
+   Ten moduł może być użyty do uruchamiania serwisów w kontekście Docker
+   Swarm. Moduł jest nakładką na Docker Compose - wszystko co można
+   zrobić za jego pomocą można też zrobić za pomocą surowego Docker
+   Compose.
+
 ### Odpowiedzi na pytania eksperymentalne
 
 1. *Jak będzie wyglądać integracja Ansible z webowym UI konfiguratora?*
